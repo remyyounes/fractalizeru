@@ -8,7 +8,7 @@ var FractalGenerator = React.createClass({
   },
   render() {
     return (
-      <div>Hello World</div>
+      <div>Hello World!</div>
     );
   }
 });
