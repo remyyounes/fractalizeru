@@ -7,7 +7,7 @@ var Page = React.createClass({
     return (
       <div>
         <Composer/>
-        <FractalGenerator width={200} height={200} iterations={3}/>
+        <FractalGenerator width={200} height={200} iterations={6}/>
       </div>
     );
   }

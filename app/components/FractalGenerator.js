@@ -1,6 +1,6 @@
 var React = require("react");
 var Line = require("./Line");
-var FractalIteration = require("./FractalIteration");
+var KochGenerator = require("./KochGenerator");
 var Victor = require("victor");
 
 var FractalGenerator = React.createClass({
@@ -12,6 +12,22 @@ var FractalGenerator = React.createClass({
   },
   // I need a basic shape
   // for each line i'll render a FractalIteration
+  generateSegment(start, end) {
+    return KochGenerator.generate(start, end);
+  },
+  generateIteration(shape) {
+    var newPoints = [];
+    var lastPoint = shape.reduce((start, end) => {
+      var segmentPoints = this.generateSegment(start,end);
+      segmentPoints.reduce((start, end) => {
+        newPoints.push(start);
+        return end;
+      });
+      return end;
+    });
+    newPoints.push(lastPoint);
+    return newPoints;
+  },
   render() {
     var shape = [
       new Victor(
@@ -28,15 +44,23 @@ var FractalGenerator = React.createClass({
       )
     ];
 
-    var iterations = [];
-    shape.reduce(function(pointA, pointB) {
-      iterations.push(<FractalIteration start={pointA} end={pointB}/>);
-      return pointB;
+    var iterations = shape;
+    for (var i = 0; i < this.props.iterations; i++) {
+      iterations = this.generateIteration(iterations);
+    }
+
+    var lines = [];
+    iterations.reduce((start, end) => {
+      lines.push(
+        <Line start={start} end={end}/>
+      );
+      return end;
     });
-    
+
+
     return (
       <svg width={this.props.width} height={this.props.height}>
-        {iterations}
+        {lines}
       </svg>
     );
   }
