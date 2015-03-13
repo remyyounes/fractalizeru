@@ -1,5 +1,6 @@
 var React = require("react");
-// var FractalGenerator = require("./FractalGenerator");
+var Line = require("./Line");
+var Victor = require("victor");
 
 var FractalGenerator = React.createClass({
   propTypes: {
@@ -7,15 +8,19 @@ var FractalGenerator = React.createClass({
     height: React.PropTypes.number
   },
   render() {
+    var start = new Victor(
+      0,
+      this.props.height/2
+    );
+
+    var end = new Victor(
+      this.props.width,
+      this.props.height/2
+    );
+
     return (
       <svg width={this.props.width} height={this.props.height}>
-        <line
-          stroke="black"
-          x1="0"
-          y1={this.props.height/2}
-          x2={this.props.width}
-          y2={this.props.height/2}
-          />
+        <Line start={start} end={end}/>
       </svg>
     );
   }
