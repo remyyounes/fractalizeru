@@ -17,7 +17,6 @@ var Page = React.createClass({
       new Victor( 0, height/2 )
     ];
 
-
     return (
       <div>
         <Composer/>
