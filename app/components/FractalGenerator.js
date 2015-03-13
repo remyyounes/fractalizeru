@@ -1,48 +1,43 @@
 var React = require("react");
 var Line = require("./Line");
 var KochGenerator = require("./KochGenerator");
-var Victor = require("victor");
-
+var Drawer = require("../mixins/Drawer");
 var FractalGenerator = React.createClass({
+  mixins: [Drawer],
   propTypes: {
     width: React.PropTypes.number.isRequired,
     height: React.PropTypes.number.isRequired,
     shape: React.PropTypes.array.isRequired,
     iterations: React.PropTypes.number.isRequired
   },
-  // I need a basic shape
-  // for each line i'll render a FractalIteration
-  generateSegment(start, end) {
-    return KochGenerator.generate(start, end);
-  },
-  generateIteration(shape) {
-    var newPoints = [];
-    var lastPoint = shape.reduce((start, end) => {
-      var segmentPoints = this.generateSegment(start,end);
-      segmentPoints.reduce((start, end) => {
-        newPoints.push(start);
+
+  generateIteration(shape, generator) {
+    var newShape = [];
+    newShape.push(
+       shape.reduce((start, end) => {
+        var segmentPoints = generator.generate(start,end);
+        segmentPoints.reduce((start, end) => {
+          newShape.push(start);
+          return end;
+        });
         return end;
-      });
-      return end;
-    });
-    newPoints.push(lastPoint);
-    return newPoints;
+      })
+    );
+    return newShape;
   },
-  render() {
 
-    var iterations = this.props.shape;
+  iterateGenerations(points) {
     for (var i = 0; i < this.props.iterations; i++) {
-      iterations = this.generateIteration(iterations);
+      points = this.generateIteration(points, KochGenerator);
     }
+    return points;
+  },
 
-    var lines = [];
-    iterations.reduce((start, end) => {
-      lines.push(
-        <Line start={start} end={end}/>
-      );
-      return end;
-    });
-
+  render() {
+    var lines = this.renderSegments(
+      Line,
+      this.iterateGenerations(this.props.shape)
+    );
 
     return (
       <svg width={this.props.width} height={this.props.height}>
