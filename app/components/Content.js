@@ -9,7 +9,7 @@ var Page = React.createClass({
     return {
       width:  200,
       height: 200
-    }
+    };
   },
   getInitialState(){
     return {

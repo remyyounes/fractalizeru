@@ -33,7 +33,7 @@ var ShapeEditor = React.createClass({
     };
   },
 
-  deselect(index) {
+  deselect() {
     this.setState({selected: null});
   },
 
@@ -44,7 +44,7 @@ var ShapeEditor = React.createClass({
   },
 
   renderDots(dots) {
-    var circles =   dots.map((dot, index) => {
+    var circles = dots.map((dot, index) => {
       return ( <Dot
         onSelect={this.selectNode.bind(null, index)}
         position={dot}

@@ -112,7 +112,7 @@
 	    return {
 	      width:  200,
 	      height: 200
-	    }
+	    };
 	  },
 	  getInitialState:function(){
 	    return {
@@ -409,7 +409,7 @@
 	    };
 	  },
 
-	  deselect:function(index) {
+	  deselect:function() {
 	    this.setState({selected: null});
 	  },
 
@@ -420,7 +420,7 @@
 	  },
 
 	  renderDots:function(dots) {
-	    var circles =   dots.map(function(dot, index)  {
+	    var circles = dots.map(function(dot, index)  {
 	      return ( React.createElement(Dot, {
 	        onSelect: this.selectNode.bind(null, index), 
 	        position: dot}
