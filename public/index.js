@@ -117,28 +117,33 @@
 	  getInitialState:function(){
 	    return {
 	      shape: [
-	        new Victor( this.props.width/5, this.props.height/2 ),
-	        new Victor( this.props.width*4/5, this.props.height/5 ),
-	        new Victor( this.props.width/5, this.props.height/2 ),
-	        new Victor( this.props.width*4/5, this.props.height*4/5 ),
-	        new Victor( this.props.width/5, this.props.height/2 )
+	        new Victor( 0, this.props.height/2 ),
+	        new Victor( this.props.width/2, 0 ),
+	        new Victor( this.props.width, this.props.height/2 ),
+	        new Victor( this.props.width/2, this.props.height),
+	        new Victor( 0, this.props.height/2 ),
 	      ]
 	    };
 	  },
-	  render:function() {
 
+	  onShapeChanged:function(shape) {
+	    this.setState({shape:shape});
+	  },
+
+	  render:function() {
 
 	    return (
 	      React.createElement("div", null, 
 	        React.createElement(Composer, null), 
-	        React.createElement(ShapeEditor, {
-	          shape: this.state.shape, 
-	          width: this.props.width, height: this.props.height}
-	        ), 
 	        React.createElement(FractalGenerator, {
 	          shape: this.state.shape, 
 	          width: this.props.width, height: this.props.height, 
-	          iterations: 5})
+	          iterations: 1}), 
+	        React.createElement(ShapeEditor, {
+	          shapeChanged: this.onShapeChanged, 
+	          shape: this.state.shape, 
+	          width: this.props.width, height: this.props.height}
+	        )
 	      )
 	    );
 	  }
@@ -371,8 +376,9 @@
 
 	var React = __webpack_require__(2);
 	var Line = __webpack_require__(9);
+	var Dot = __webpack_require__(157);
 	var Drawer = __webpack_require__(10);
-
+	var Victor = __webpack_require__(8);
 	var ShapeEditor = React.createClass({displayName: "ShapeEditor",
 	  mixins: [Drawer],
 
@@ -382,17 +388,54 @@
 	    shape: React.PropTypes.array.isRequired
 	  },
 
+	  componentDidMount:function() {
+	    this.getDOMNode().addEventListener("mousemove", this.mouseMove);
+	    document.addEventListener("mouseup", this.deselect);
+	  },
+
+	  mouseMove:function(e) {
+	    if(this.state.selected !== null) {
+	      var shape = this.state.shape.slice();
+	      shape[this.state.selected] = new Victor(e.offsetX, e.offsetY);
+	      this.setState({ shape: shape });
+	      this.props.shapeChanged(shape);
+	    }
+	  },
+
 	  getInitialState:function() {
 	    return {
-	      shape: this.props.shape
+	      shape: this.props.shape,
+	      selected: null
 	    };
 	  },
 
+	  deselect:function(index) {
+	    this.setState({selected: null});
+	  },
+
+	  selectNode:function(index) {
+	    this.setState({
+	      selected: index
+	    });
+	  },
+
+	  renderDots:function(dots) {
+	    var circles =   dots.map(function(dot, index)  {
+	      return ( React.createElement(Dot, {
+	        onSelect: this.selectNode.bind(null, index), 
+	        position: dot}
+	      ));
+	    }.bind(this));
+	    return circles;
+	  },
+
 	  render:function() {
-	    var lines = this.renderSegments(Line, this.state.shape);
+	    var lines = this.renderSegments(Line, this.state.shape.slice());
+	    var dots = this.renderDots(this.state.shape.slice());
 	    return (
 	      React.createElement("svg", {width: this.props.width, height: this.props.height}, 
-	        lines
+	        lines, 
+	        dots
 	      )
 	    );
 	  }
@@ -20236,6 +20279,33 @@
 	module.exports = toArray;
 
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(36)))
+
+/***/ },
+/* 157 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var React = __webpack_require__(2);
+
+
+	var Dot = React.createClass({displayName: "Dot",
+	  propTypes: {
+	    position: React.PropTypes.object.isRequired,
+	    onMove: React.PropTypes.func
+	  },
+
+	  render:function() {
+	    return (
+	        React.createElement("circle", {
+	          onMouseDown: this.props.onSelect, 
+	          cx: this.props.position.x, 
+	          cy: this.props.position.y, 
+	          r: 10, stroke: "black", "stroke-width": "3", fill: "red"})
+	    );
+	  }
+	});
+
+	module.exports = Dot;
+
 
 /***/ }
 /******/ ]);
