@@ -15,6 +15,16 @@ var Drawer = {
     return this.connectTheDots(points).map((line) => {
       return ( <Segment start={line.start} end={line.end}/> );
     });
+  },
+
+  renderDots(Component, dots) {
+    var circles = dots.map((dot, index) => {
+      return ( <Component
+        onSelect={this.selectNode.bind(null, index)}
+        position={dot}
+      />);
+    });
+    return circles;
   }
 
 };

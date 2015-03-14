@@ -9,7 +9,7 @@ var ShapeEditor = React.createClass({
   propTypes: {
     width: React.PropTypes.number.isRequired,
     height: React.PropTypes.number.isRequired,
-    shape: React.PropTypes.array.isRequired
+    segment: React.PropTypes.array.isRequired
   },
 
   componentDidMount() {
@@ -19,16 +19,16 @@ var ShapeEditor = React.createClass({
 
   mouseMove(e) {
     if(this.state.selected !== null) {
-      var shape = this.state.shape.slice();
-      shape[this.state.selected] = new Victor(e.offsetX, e.offsetY);
-      this.setState({ shape: shape });
-      this.props.shapeChanged(shape);
+      var segment = this.state.segment.slice();
+      segment[this.state.selected] = new Victor(e.offsetX, e.offsetY);
+      this.setState({ segment: segment });
+      this.props.shapeChanged(segment);
     }
   },
 
   getInitialState() {
     return {
-      shape: this.props.shape,
+      segment: this.props.segment,
       selected: null
     };
   },
@@ -44,8 +44,8 @@ var ShapeEditor = React.createClass({
   },
 
   render() {
-    var lines = this.renderSegments(Line, this.state.shape.slice());
-    var dots = this.renderDots(Dot, this.state.shape.slice());
+    var lines = this.renderSegments(Line, this.state.segment.slice());
+    var dots = this.renderDots(Dot, this.state.segment.slice());
     return (
       <svg width={this.props.width} height={this.props.height}>
         {lines}

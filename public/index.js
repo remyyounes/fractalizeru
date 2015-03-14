@@ -104,6 +104,8 @@
 	var React = __webpack_require__(2);
 	var Composer = __webpack_require__(5);
 	var ShapeEditor = __webpack_require__(6);
+	var SegmentEditor = __webpack_require__(158);
+	var KochGenerator = __webpack_require__(11);
 	var FractalGenerator = __webpack_require__(7);
 	var Victor = __webpack_require__(8);
 
@@ -122,12 +124,23 @@
 	        new Victor( this.props.width, this.props.height/2 ),
 	        new Victor( this.props.width/2, this.props.height),
 	        new Victor( 0, this.props.height/2 ),
+	      ],
+	      segment: [
+	        new Victor( 0, this.props.height/2 ),
+	        new Victor( this.props.width/3, this.props.height/2),
+	        new Victor( this.props.width/2, this.props.height/2.5),
+	        new Victor( this.props.width*2/3, this.props.height/2),
+	        new Victor( this.props.width, this.props.height/2 ),
 	      ]
 	    };
 	  },
 
 	  onShapeChanged:function(shape) {
 	    this.setState({shape:shape});
+	  },
+
+	  onSegmentChanged:function(segment) {
+	    this.setState({segment:segment});
 	  },
 
 	  render:function() {
@@ -138,10 +151,16 @@
 	        React.createElement(FractalGenerator, {
 	          shape: this.state.shape, 
 	          width: this.props.width, height: this.props.height, 
+	          generator: KochGenerator, 
 	          iterations: 1}), 
 	        React.createElement(ShapeEditor, {
 	          shapeChanged: this.onShapeChanged, 
 	          shape: this.state.shape, 
+	          width: this.props.width, height: this.props.height}
+	        ), 
+	        React.createElement(SegmentEditor, {
+	          segmentChanged: this.onSegmentChanged, 
+	          segment: this.state.segment, 
 	          width: this.props.width, height: this.props.height}
 	        )
 	      )
@@ -419,19 +438,9 @@
 	    });
 	  },
 
-	  renderDots:function(dots) {
-	    var circles = dots.map(function(dot, index)  {
-	      return ( React.createElement(Dot, {
-	        onSelect: this.selectNode.bind(null, index), 
-	        position: dot}
-	      ));
-	    }.bind(this));
-	    return circles;
-	  },
-
 	  render:function() {
 	    var lines = this.renderSegments(Line, this.state.shape.slice());
-	    var dots = this.renderDots(this.state.shape.slice());
+	    var dots = this.renderDots(Dot, this.state.shape.slice());
 	    return (
 	      React.createElement("svg", {width: this.props.width, height: this.props.height}, 
 	        lines, 
@@ -450,14 +459,15 @@
 
 	var React = __webpack_require__(2);
 	var Line = __webpack_require__(9);
-	var KochGenerator = __webpack_require__(11);
 	var Drawer = __webpack_require__(10);
+
 	var FractalGenerator = React.createClass({displayName: "FractalGenerator",
 	  mixins: [Drawer],
 	  propTypes: {
 	    width: React.PropTypes.number.isRequired,
 	    height: React.PropTypes.number.isRequired,
 	    shape: React.PropTypes.array.isRequired,
+	    generator: React.PropTypes.object.isRequired,
 	    iterations: React.PropTypes.number.isRequired
 	  },
 
@@ -478,7 +488,7 @@
 
 	  iterateGenerations:function(points) {
 	    for (var i = 0; i < this.props.iterations; i++) {
-	      points = this.generateIteration(points, KochGenerator);
+	      points = this.generateIteration(points, this.props.generator);
 	    }
 	    return points;
 	  },
@@ -1604,6 +1614,16 @@
 	    return this.connectTheDots(points).map(function(line)  {
 	      return ( React.createElement(Segment, {start: line.start, end: line.end}) );
 	    });
+	  },
+
+	  renderDots:function(Component, dots) {
+	    var circles = dots.map(function(dot, index)  {
+	      return ( React.createElement(Component, {
+	        onSelect: this.selectNode.bind(null, index), 
+	        position: dot}
+	      ));
+	    }.bind(this));
+	    return circles;
 	  }
 
 	};
@@ -1642,7 +1662,6 @@
 	  segment.multiply(new Victor(2/3, 2/3));
 	  return segment.add(startPoint);
 	};
-
 
 	var KochGenerator = {
 	  generate:function(start, end) {
@@ -20305,6 +20324,70 @@
 	});
 
 	module.exports = Dot;
+
+
+/***/ },
+/* 158 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var React = __webpack_require__(2);
+	var Line = __webpack_require__(9);
+	var Dot = __webpack_require__(157);
+	var Drawer = __webpack_require__(10);
+	var Victor = __webpack_require__(8);
+	var ShapeEditor = React.createClass({displayName: "ShapeEditor",
+	  mixins: [Drawer],
+
+	  propTypes: {
+	    width: React.PropTypes.number.isRequired,
+	    height: React.PropTypes.number.isRequired,
+	    segment: React.PropTypes.array.isRequired
+	  },
+
+	  componentDidMount:function() {
+	    this.getDOMNode().addEventListener("mousemove", this.mouseMove);
+	    document.addEventListener("mouseup", this.deselect);
+	  },
+
+	  mouseMove:function(e) {
+	    if(this.state.selected !== null) {
+	      var segment = this.state.segment.slice();
+	      segment[this.state.selected] = new Victor(e.offsetX, e.offsetY);
+	      this.setState({ segment: segment });
+	      this.props.shapeChanged(segment);
+	    }
+	  },
+
+	  getInitialState:function() {
+	    return {
+	      segment: this.props.segment,
+	      selected: null
+	    };
+	  },
+
+	  deselect:function() {
+	    this.setState({selected: null});
+	  },
+
+	  selectNode:function(index) {
+	    this.setState({
+	      selected: index
+	    });
+	  },
+
+	  render:function() {
+	    var lines = this.renderSegments(Line, this.state.segment.slice());
+	    var dots = this.renderDots(Dot, this.state.segment.slice());
+	    return (
+	      React.createElement("svg", {width: this.props.width, height: this.props.height}, 
+	        lines, 
+	        dots
+	      )
+	    );
+	  }
+	});
+
+	module.exports = ShapeEditor;
 
 
 /***/ }

@@ -1,13 +1,14 @@
 var React = require("react");
 var Line = require("./Line");
-var KochGenerator = require("./KochGenerator");
 var Drawer = require("../mixins/Drawer");
+
 var FractalGenerator = React.createClass({
   mixins: [Drawer],
   propTypes: {
     width: React.PropTypes.number.isRequired,
     height: React.PropTypes.number.isRequired,
     shape: React.PropTypes.array.isRequired,
+    generator: React.PropTypes.object.isRequired,
     iterations: React.PropTypes.number.isRequired
   },
 
@@ -28,7 +29,7 @@ var FractalGenerator = React.createClass({
 
   iterateGenerations(points) {
     for (var i = 0; i < this.props.iterations; i++) {
-      points = this.generateIteration(points, KochGenerator);
+      points = this.generateIteration(points, this.props.generator);
     }
     return points;
   },

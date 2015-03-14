@@ -26,7 +26,6 @@ var kochD = (startPoint, endPoint) => {
   return segment.add(startPoint);
 };
 
-
 var KochGenerator = {
   generate(start, end) {
     return [
