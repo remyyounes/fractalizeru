@@ -1,5 +1,4 @@
 var React = require("react");
-var Composer = require("./Composer");
 var ShapeEditor = require("./ShapeEditor");
 var SegmentEditor = require("./SegmentEditor");
 var CustomGenerator = require("./CustomGenerator");
@@ -15,6 +14,7 @@ var Page = React.createClass({
   },
   getInitialState(){
     return {
+      iterations: 4,
       shape: [
         new Victor( 0, this.props.height/2 ),
         new Victor( this.props.width/2, 0 ),
@@ -40,26 +40,32 @@ var Page = React.createClass({
     this.setState({segment:segment});
   },
 
+  changeIterations(e) {
+    this.setState({iterations: e.target.value});
+  },
+
   render() {
     var generator = CustomGenerator(this.state.segment);
     return (
       <div>
-        <Composer/>
+        <div>
+          <ShapeEditor
+            shapeChanged={this.onShapeChanged}
+            shape={this.state.shape}
+            width={this.props.width} height={this.props.height}
+          />
+          <SegmentEditor
+            segmentChanged={this.onSegmentChanged}
+            segment={this.state.segment}
+            width={this.props.width} height={this.props.height}
+          />
+        <input type="range" min={0} max={5} onChange={this.changeIterations}/>
+        </div>
         <FractalGenerator
           shape={this.state.shape}
           width={this.props.width} height={this.props.height}
           generator={generator}
-          iterations={4}/>
-        <ShapeEditor
-          shapeChanged={this.onShapeChanged}
-          shape={this.state.shape}
-          width={this.props.width} height={this.props.height}
-        />
-        <SegmentEditor
-          segmentChanged={this.onSegmentChanged}
-          segment={this.state.segment}
-          width={this.props.width} height={this.props.height}
-        />
+          iterations={this.state.iterations}/>
       </div>
     );
   }

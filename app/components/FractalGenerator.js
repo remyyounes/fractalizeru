@@ -41,7 +41,7 @@ var FractalGenerator = React.createClass({
     );
 
     return (
-      <svg width={this.props.width} height={this.props.height}>
+      <svg className={"viewer"} width={this.props.width} height={this.props.height}>
         {lines}
       </svg>
     );
