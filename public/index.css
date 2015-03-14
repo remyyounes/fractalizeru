@@ -1,12 +1,13 @@
 body {
   text-align: center;
 }
-svg {
+
+
+.viewer-container svg {
   overflow: visible;
   margin: 20px;
 }
-
-.viewer {
+.viewer-container .viewer {
   transform: scale(3);
   transform-origin: top center;
 }
@@ -14,4 +15,15 @@ svg {
 input[type="range"] {
   display: block;
   margin: 0 auto;
+}
+
+
+.collection {
+  border-left: 1px solid black;
+  height: 100%;
+  overflow-y: scroll;
+  width: 220px;
+  position: absolute;
+  top:0;
+  right: 0;
 }
