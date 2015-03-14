@@ -46,6 +46,11 @@ var Composer = React.createClass({
     this.setState({iterations: e.target.value});
   },
 
+  handleAdd() {
+    this.props.onAdd(this.state);
+  },
+
+
   render() {
     var generator = CustomGenerator(this.state.segment);
     return (
@@ -62,6 +67,7 @@ var Composer = React.createClass({
             width={this.props.width} height={this.props.height}
           />
           <input type="range" min={0} max={5} onChange={this.changeIterations}/>
+          <button onClick={this.handleAdd}/>
         </div>
 
         <FractalGenerator
