@@ -22,7 +22,7 @@ var ShapeEditor = React.createClass({
       var segment = this.state.segment.slice();
       segment[this.state.selected] = new Victor(e.offsetX, e.offsetY);
       this.setState({ segment: segment });
-      this.props.shapeChanged(segment);
+      this.props.segmentChanged(segment);
     }
   },
 

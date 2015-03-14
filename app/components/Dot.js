@@ -13,7 +13,7 @@ var Dot = React.createClass({
           onMouseDown={this.props.onSelect}
           cx={this.props.position.x}
           cy={this.props.position.y}
-          r={10} stroke="black" stroke-width="3" fill="red" />
+          r={5} stroke="black" strokeWidth="5" fill="transparent" />
     );
   }
 });
