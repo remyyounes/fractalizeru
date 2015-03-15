@@ -7,10 +7,21 @@ var Dot = React.createClass({
     onMove: React.PropTypes.func
   },
 
+  handleMouseDown(e) {
+    e.preventDefault();
+    debugger;
+    e.stopPropagation();
+    if ( e.shiftKey ) {
+      this.props.onRemove();
+    } else {
+      this.props.onSelect();
+    }
+  },
+
   render() {
     return (
         <circle
-          onMouseDown={this.props.onSelect}
+          onMouseDown={this.handleMouseDown}
           cx={this.props.position.x}
           cy={this.props.position.y}
           r={5} stroke="black" strokeWidth="5" fill="transparent" />

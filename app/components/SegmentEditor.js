@@ -3,7 +3,7 @@ var Line = require("./Line");
 var Dot = require("./Dot");
 var Drawer = require("../mixins/Drawer");
 var Victor = require("victor");
-var ShapeEditor = React.createClass({
+var SegmentEditor = React.createClass({
   mixins: [Drawer],
 
   propTypes: {
@@ -13,7 +13,9 @@ var ShapeEditor = React.createClass({
   },
 
   componentDidMount() {
-    this.getDOMNode().addEventListener("mousemove", this.mouseMove);
+    var node = this.getDOMNode();
+    node.addEventListener("mousemove", this.mouseMove);
+    node.addEventListener("click", this.mouseClick);
     document.addEventListener("mouseup", this.deselect);
   },
 
@@ -23,6 +25,12 @@ var ShapeEditor = React.createClass({
       segment[this.state.selected] = new Victor(e.offsetX, e.offsetY);
       this.setState({ segment: segment });
       this.props.segmentChanged(segment);
+    }
+  },
+
+  mouseClick(e) {
+    if (e.shiftKey) {
+      this.addNode(e.offsetX, e.offsetY);
     }
   },
 
@@ -38,9 +46,25 @@ var ShapeEditor = React.createClass({
   },
 
   selectNode(index) {
-    this.setState({
-      selected: index
-    });
+    this.setState({ selected: index });
+  },
+
+  removeNode(index) {
+    var newSegment = this.state.segment.slice();
+    newSegment.splice(index, 1);
+    this.setState({ segment: newSegment });
+    this.props.segmentChanged(newSegment);
+  },
+
+  addNode(x, y) {
+    x = x || Math.random() * this.props.width;
+    y = y || Math.random() * this.props.height;
+    var node = new Victor(x, y);
+    var newSegment = this.state.segment.slice();
+    newSegment.push(node);
+
+    this.setState({segment: newSegment});
+    this.props.segmentChanged(newSegment);
   },
 
   render() {
@@ -55,4 +79,4 @@ var ShapeEditor = React.createClass({
   }
 });
 
-module.exports = ShapeEditor;
+module.exports = SegmentEditor;

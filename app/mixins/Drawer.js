@@ -21,6 +21,8 @@ var Drawer = {
     var circles = dots.map((dot, index) => {
       return ( <Component
         onSelect={this.selectNode.bind(null, index)}
+        onRemove={this.removeNode.bind(null, index)}
+        onAdd={this.addNode}
         position={dot}
       />);
     });

@@ -38,9 +38,23 @@ var ShapeEditor = React.createClass({
   },
 
   selectNode(index) {
-    this.setState({
-      selected: index
-    });
+    this.setState({ selected: index });
+  },
+
+  removeNode(index) {
+    var newShape = this.state.shape.slice();
+    newShape.splice(index, 1);
+    this.setState({ shape: newShape });
+    this.props.shapeChanged(newShape);
+  },
+
+  addNode(x, y) {
+    x = x || Math.random() * this.props.width;
+    y = y || Math.random() * this.props.height;
+    var node = new Victor(x, y);
+    var newShape = this.state.shape.slice();
+    newShape.push(node);
+    this.setState({shape: newShape});
   },
 
   render() {
