@@ -9,7 +9,6 @@ var Dot = React.createClass({
 
   handleMouseDown(e) {
     e.preventDefault();
-    debugger;
     e.stopPropagation();
     if ( e.shiftKey ) {
       this.props.onRemove();

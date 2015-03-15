@@ -1,9 +1,7 @@
 var React = require("react");
-var Line = require("./Line");
-var Drawer = require("../mixins/Drawer");
+var Drawer = require("./Drawer");
 
 var FractalGenerator = React.createClass({
-  mixins: [Drawer],
   propTypes: {
     width: React.PropTypes.number.isRequired,
     height: React.PropTypes.number.isRequired,
@@ -35,15 +33,16 @@ var FractalGenerator = React.createClass({
   },
 
   render() {
-    var lines = this.renderSegments(
-      Line,
-      this.iterateGenerations(this.props.shape)
-    );
+    var lines = this.iterateGenerations(this.props.shape);
 
     return (
-      <svg className={"viewer"} width={this.props.width} height={this.props.height}>
-        {lines}
-      </svg>
+      <div className="viewer">
+        <Drawer
+          shape={lines}
+          editable={false}
+          width={this.props.width}
+          height={this.props.height}/>
+      </div>
     );
   }
 });

@@ -57,12 +57,12 @@ var Composer = React.createClass({
       <div className="viewer-container">
         <div>
           <ShapeEditor
-            shapeChanged={this.onShapeChanged}
+            onChange={this.onShapeChanged}
             shape={this.state.shape}
             width={this.props.width} height={this.props.height}
           />
           <SegmentEditor
-            segmentChanged={this.onSegmentChanged}
+            onChange={this.onSegmentChanged}
             segment={this.state.segment}
             width={this.props.width} height={this.props.height}
           />
