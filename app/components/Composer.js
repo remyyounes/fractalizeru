@@ -16,7 +16,7 @@ var Composer = React.createClass({
 
   getInitialState(){
     return {
-      iterations: 4,
+      iterations: 2,
       shape: [
         new Victor( 0, this.props.height/2 ),
         new Victor( this.props.width/2, 0 ),

@@ -16,27 +16,28 @@ var Content = React.createClass({
   componentDidMount() {
     this.firebaseRef = new Firebase("https://mini3-firebase.firebaseio.com/").child("fractals");
     this.firebaseRef.on('value', this.handleFirebaseChange);
-    this.firebaseRef.on("child_added", this.onFractalAdd);
+    // this.firebaseRef.on("child_added", this.onFractalAdd);
   },
 
   handleFirebaseChange (snapshot) {
+    debugger;
     var list = this.toArray(snapshot.val());
-    this.parseFractals(list);
+    fractals = this.parseFractals(list);
 
     this.setState({ fractals: fractals });
   },
 
   parseFractals(list) {
+    debugger;
     var fractals = list.map((fractal) => {
-      fractalObj = fractal.val;
-      fractalObj.segment = fractalObj.segment.map((seg) => {
-        return new Victor(seg);
+      fractal.val.segment = fractal.val.segment.map((seg) => {
+        return Victor.fromObject(seg);
       });
-      fractalObj.shape = fractalObj.shape.map((point) => {
-        return new Victor(point);
+      fractal.val.shape = fractal.val.shape.map((point) => {
+        return Victor.fromObject(point);
       });
 
-      return fractalObj;
+      return fractal;
     });
     return fractals;
   },
@@ -46,10 +47,12 @@ var Content = React.createClass({
     for (var i in object) {
       var obj = {};
       obj.val = object[i];
+      obj.val = obj.val;
       obj.key = i;
       arr.push(obj);
     }
     return arr;
+    debugger;
   },
 
   onFractalAdd(snapshot) {
@@ -59,6 +62,7 @@ var Content = React.createClass({
   },
 
   handleAddFractal: function(newFractal) {
+    debugger;
     this.firebaseRef.push(newFractal);
   },
 

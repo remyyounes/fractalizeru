@@ -16,42 +16,34 @@ var FractalCollection = React.createClass({
   getInitialProps() {
     return {
       fractals: [
-        {iterations: 4,
-        shape: [
-          new Victor( 0, this.props.height/2 ),
-          new Victor( this.props.width/2, 0 ),
-          new Victor( this.props.width, this.props.height/2 ),
-          new Victor( this.props.width/2, this.props.height),
-          new Victor( 0, this.props.height/2 ),
-        ],
-        segment: [
-          new Victor( 0, this.props.height/2 ),
-          new Victor( this.props.width/3, this.props.height/2),
-          new Victor( this.props.width/2, this.props.height/4),
-          new Victor( this.props.width*2/3, this.props.height/2),
-          new Victor( this.props.width, this.props.height/2 ),
-        ]},
-        {iterations: 4,
-        shape: [
-          new Victor( 0, this.props.height/2 ),
-          new Victor( this.props.width/2, 0 ),
-          new Victor( this.props.width, this.props.height/2 ),
-          new Victor( this.props.width/2, this.props.height),
-          new Victor( 0, this.props.height/2 ),
-        ],
-        segment: [
-          new Victor( 0, this.props.height/2 ),
-          new Victor( this.props.width/3, this.props.height/2),
-          new Victor( this.props.width/2, this.props.height/3),
-          new Victor( this.props.width/1, this.props.height/1),
-          new Victor( this.props.width/1, this.props.height/4 ),
-        ]}
+        {
+          key: "Koch",
+          val: {
+            iterations: 4,
+            shape: [
+              new Victor( 0, this.props.height/2 ),
+              new Victor( this.props.width/2, 0 ),
+              new Victor( this.props.width, this.props.height/2 ),
+              new Victor( this.props.width/2, this.props.height),
+              new Victor( 0, this.props.height/2 ),
+            ],
+            segment: [
+              new Victor( 0, this.props.height/2 ),
+              new Victor( this.props.width/3, this.props.height/2),
+              new Victor( this.props.width/2, this.props.height/4),
+              new Victor( this.props.width*2/3, this.props.height/2),
+              new Victor( this.props.width, this.props.height/2 ),
+            ]
+          }
+        }
       ]
     };
   },
 
   renderFractals(fractals){
-    return !fractals.length ? null : fractals.map((fractal) =>{
+    debugger;
+    return !fractals.length ? null : fractals.map((fractalObj) =>{
+      var fractal = fractalObj.val;
       return (<FractalGenerator
         shape={fractal.shape}
         generator={CustomGenerator(fractal.segment)}
