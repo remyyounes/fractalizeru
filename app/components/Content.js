@@ -9,6 +9,7 @@ var Content = React.createClass({
 
   getInitialState() {
     return {
+      selected: null,
       fractals: []
     };
   },
@@ -20,7 +21,6 @@ var Content = React.createClass({
   },
 
   handleFirebaseChange (snapshot) {
-    debugger;
     var list = this.toArray(snapshot.val());
     fractals = this.parseFractals(list);
 
@@ -28,7 +28,6 @@ var Content = React.createClass({
   },
 
   parseFractals(list) {
-    debugger;
     var fractals = list.map((fractal) => {
       fractal.val.segment = fractal.val.segment.map((seg) => {
         return Victor.fromObject(seg);
@@ -36,7 +35,6 @@ var Content = React.createClass({
       fractal.val.shape = fractal.val.shape.map((point) => {
         return Victor.fromObject(point);
       });
-
       return fractal;
     });
     return fractals;
@@ -52,7 +50,6 @@ var Content = React.createClass({
       arr.push(obj);
     }
     return arr;
-    debugger;
   },
 
   onFractalAdd(snapshot) {
@@ -62,8 +59,11 @@ var Content = React.createClass({
   },
 
   handleAddFractal: function(newFractal) {
-    debugger;
     this.firebaseRef.push(newFractal);
+  },
+
+  onFractalSelected(fractal) {
+    this.setState({selected: fractal});
   },
 
   getDefaultProps() {
@@ -77,10 +77,11 @@ var Content = React.createClass({
     return (
       <div>
         <FractalCollection
-        fractals={this.state.fractals}
+          onSelect={this.onFractalSelected}
+          fractals={this.state.fractals}
           width={this.props.width} height={this.props.height}/>
 
-        <Composer fractal={""} onAdd={this.handleAddFractal}/>
+        <Composer fractal={this.state.selected} onAdd={this.handleAddFractal}/>
       </div>
     );
   }

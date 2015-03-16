@@ -41,16 +41,18 @@ var FractalCollection = React.createClass({
   },
 
   renderFractals(fractals){
-    debugger;
     return !fractals.length ? null : fractals.map((fractalObj) =>{
       var fractal = fractalObj.val;
-      return (<FractalGenerator
-        shape={fractal.shape}
-        generator={CustomGenerator(fractal.segment)}
-        iterations={fractal.iterations}
-        width={this.props.width}
-        height={this.props.height}
-        />);
+      return (<div onClick={this.props.onSelect.bind(null,fractal)}>
+        <FractalGenerator
+          shape={fractal.shape}
+          generator={CustomGenerator(fractal.segment)}
+          iterations={fractal.iterations}
+          width={this.props.width}
+          height={this.props.height}
+          />
+        </div>
+      );
     });
   },
 

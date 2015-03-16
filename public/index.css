@@ -19,6 +19,7 @@ input[type="range"] {
 
 
 .collection {
+  z-index: 999;
   border-left: 1px solid black;
   height: 100%;
   overflow-y: scroll;
@@ -26,4 +27,5 @@ input[type="range"] {
   position: absolute;
   top:0;
   right: 0;
+  bottom: 0;
 }

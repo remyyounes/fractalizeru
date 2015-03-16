@@ -103,6 +103,7 @@
 
 	  getInitialState:function() {
 	    return {
+	      selected: null,
 	      fractals: []
 	    };
 	  },
@@ -114,7 +115,6 @@
 	  },
 
 	  handleFirebaseChange:function (snapshot) {
-	    debugger;
 	    var list = this.toArray(snapshot.val());
 	    fractals = this.parseFractals(list);
 
@@ -122,7 +122,6 @@
 	  },
 
 	  parseFractals:function(list) {
-	    debugger;
 	    var fractals = list.map(function(fractal)  {
 	      fractal.val.segment = fractal.val.segment.map(function(seg)  {
 	        return Victor.fromObject(seg);
@@ -130,7 +129,6 @@
 	      fractal.val.shape = fractal.val.shape.map(function(point)  {
 	        return Victor.fromObject(point);
 	      });
-
 	      return fractal;
 	    });
 	    return fractals;
@@ -146,7 +144,6 @@
 	      arr.push(obj);
 	    }
 	    return arr;
-	    debugger;
 	  },
 
 	  onFractalAdd:function(snapshot) {
@@ -156,8 +153,11 @@
 	  },
 
 	  handleAddFractal: function(newFractal) {
-	    debugger;
 	    this.firebaseRef.push(newFractal);
+	  },
+
+	  onFractalSelected:function(fractal) {
+	    this.setState({selected: fractal});
 	  },
 
 	  getDefaultProps:function() {
@@ -171,10 +171,11 @@
 	    return (
 	      React.createElement("div", null, 
 	        React.createElement(FractalCollection, {
-	        fractals: this.state.fractals, 
+	          onSelect: this.onFractalSelected, 
+	          fractals: this.state.fractals, 
 	          width: this.props.width, height: this.props.height}), 
 
-	        React.createElement(Composer, {fractal: "", onAdd: this.handleAddFractal})
+	        React.createElement(Composer, {fractal: this.state.selected, onAdd: this.handleAddFractal})
 	      )
 	    );
 	  }
@@ -396,54 +397,67 @@
 
 	  getInitialState:function(){
 	    return {
-	      iterations: 2,
-	      shape: [
-	        new Victor( 0, this.props.height/2 ),
-	        new Victor( this.props.width/2, 0 ),
-	        new Victor( this.props.width, this.props.height/2 ),
-	        new Victor( this.props.width/2, this.props.height),
-	        new Victor( 0, this.props.height/2 ),
-	      ],
-	      segment: [
-	        new Victor( 0, this.props.height/2 ),
-	        new Victor( this.props.width/3, this.props.height/2),
-	        new Victor( this.props.width/2, this.props.height/4),
-	        new Victor( this.props.width*2/3, this.props.height/2),
-	        new Victor( this.props.width, this.props.height/2 ),
-	      ]
+	      fractal: {
+	        iterations: 2,
+	        shape: [
+	          new Victor( 0, this.props.height/2 ),
+	          new Victor( this.props.width/2, 0 ),
+	          new Victor( this.props.width, this.props.height/2 ),
+	          new Victor( this.props.width/2, this.props.height),
+	          new Victor( 0, this.props.height/2 ),
+	        ],
+	        segment: [
+	          new Victor( 0, this.props.height/2 ),
+	          new Victor( this.props.width/3, this.props.height/2),
+	          new Victor( this.props.width/2, this.props.height/4),
+	          new Victor( this.props.width*2/3, this.props.height/2),
+	          new Victor( this.props.width, this.props.height/2 ),
+	        ]
+	      }
 	    };
 	  },
 
+	  componentWillReceiveProps:function(nextProps) {
+	    if (nextProps.fractal !== this.props.fractal)
+	      this.setState({fractal: nextProps.fractal});
+	  },
+
 	  onShapeChanged:function(shape) {
-	    this.setState({shape:shape});
+	    var fractal = this.state.fractal;
+	    fractal.shape = shape;
+	    this.setState({fractal: fractal});
 	  },
 
 	  onSegmentChanged:function(segment) {
-	    this.setState({segment:segment});
+	    var fractal = this.state.fractal;
+	    fractal.segment = segment;
+	    this.setState({fractal: fractal});
 	  },
 
 	  changeIterations:function(e) {
-	    this.setState({iterations: e.target.value});
+	    var fractal = this.state.fractal;
+	    fractal.iterations = e.target.value;
+	    this.setState({fractal: fractal});
 	  },
 
 	  handleAdd:function() {
-	    this.props.onAdd(this.state);
+	    this.props.onAdd(this.state.fractal);
 	  },
 
 
 	  render:function() {
-	    var generator = CustomGenerator(this.state.segment);
+	    var generator = CustomGenerator(this.state.fractal.segment);
 	    return (
 	      React.createElement("div", {className: "viewer-container"}, 
 	        React.createElement("div", null, 
 	          React.createElement(ShapeEditor, {
 	            onChange: this.onShapeChanged, 
-	            shape: this.state.shape, 
+	            shape: this.state.fractal.shape, 
 	            width: this.props.width, height: this.props.height}
 	          ), 
 	          React.createElement(SegmentEditor, {
 	            onChange: this.onSegmentChanged, 
-	            segment: this.state.segment, 
+	            segment: this.state.fractal.segment, 
 	            width: this.props.width, height: this.props.height}
 	          ), 
 	          React.createElement("input", {type: "range", min: 0, max: 5, onChange: this.changeIterations}), 
@@ -451,10 +465,10 @@
 	        ), 
 
 	        React.createElement(FractalGenerator, {
-	          shape: this.state.shape, 
+	          shape: this.state.fractal.shape, 
 	          width: this.props.width, height: this.props.height, 
 	          generator: generator, 
-	          iterations: this.state.iterations})
+	          iterations: this.state.fractal.iterations})
 	      )
 	    );
 	  }
@@ -510,16 +524,18 @@
 	  },
 
 	  renderFractals:function(fractals){
-	    debugger;
 	    return !fractals.length ? null : fractals.map(function(fractalObj) {
 	      var fractal = fractalObj.val;
-	      return (React.createElement(FractalGenerator, {
-	        shape: fractal.shape, 
-	        generator: CustomGenerator(fractal.segment), 
-	        iterations: fractal.iterations, 
-	        width: this.props.width, 
-	        height: this.props.height}
-	        ));
+	      return (React.createElement("div", {onClick: this.props.onSelect.bind(null,fractal)}, 
+	        React.createElement(FractalGenerator, {
+	          shape: fractal.shape, 
+	          generator: CustomGenerator(fractal.segment), 
+	          iterations: fractal.iterations, 
+	          width: this.props.width, 
+	          height: this.props.height}
+	          )
+	        )
+	      );
 	    }.bind(this));
 	  },
 
