@@ -66,6 +66,11 @@ var Content = React.createClass({
     this.setState({selected: fractal});
   },
 
+  onFractalRemove(key) {
+    debugger;
+    this.firebaseRef.child(key).remove();
+  },
+
   getDefaultProps() {
     return {
       width:  200,
@@ -78,6 +83,7 @@ var Content = React.createClass({
       <div>
         <FractalCollection
           onSelect={this.onFractalSelected}
+          onRemove={this.onFractalRemove}
           fractals={this.state.fractals}
           width={this.props.width} height={this.props.height}/>
 

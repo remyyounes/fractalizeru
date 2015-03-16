@@ -81,6 +81,14 @@ var Composer = React.createClass({
           />
           <input type="range" min={0} max={5} onChange={this.changeIterations}/>
           <button onClick={this.handleAdd}>Save Fractal</button>
+          <ul className="instructions">
+            <li> Drag nodes around to change the fractal.</li>
+            <li> Shift+Click on a node removes it. </li>
+            <li> Shift+Click on the top canvases adds a node. </li>
+            <li> Click on the side panel to load a saved fractal. </li>
+            <li> Shift+Click on the the side panel to remove a fractal (you can delete anybodys stuff, so be cool)</li>
+
+          </ul>
         </div>
 
         <FractalGenerator

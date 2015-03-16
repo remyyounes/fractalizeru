@@ -160,6 +160,11 @@
 	    this.setState({selected: fractal});
 	  },
 
+	  onFractalRemove:function(key) {
+	    debugger;
+	    this.firebaseRef.child(key).remove();
+	  },
+
 	  getDefaultProps:function() {
 	    return {
 	      width:  200,
@@ -172,6 +177,7 @@
 	      React.createElement("div", null, 
 	        React.createElement(FractalCollection, {
 	          onSelect: this.onFractalSelected, 
+	          onRemove: this.onFractalRemove, 
 	          fractals: this.state.fractals, 
 	          width: this.props.width, height: this.props.height}), 
 
@@ -461,7 +467,15 @@
 	            width: this.props.width, height: this.props.height}
 	          ), 
 	          React.createElement("input", {type: "range", min: 0, max: 5, onChange: this.changeIterations}), 
-	          React.createElement("button", {onClick: this.handleAdd}, "Save Fractal")
+	          React.createElement("button", {onClick: this.handleAdd}, "Save Fractal"), 
+	          React.createElement("ul", {className: "instructions"}, 
+	            React.createElement("li", null, " Drag nodes around to change the fractal."), 
+	            React.createElement("li", null, " Shift+Click on a node removes it. "), 
+	            React.createElement("li", null, " Shift+Click on the top canvases adds a node. "), 
+	            React.createElement("li", null, " Click on the side panel to load a saved fractal. "), 
+	            React.createElement("li", null, " Shift+Click on the the side panel to remove a fractal (you can delete anybodys stuff, so be cool)")
+
+	          )
 	        ), 
 
 	        React.createElement(FractalGenerator, {
@@ -526,7 +540,7 @@
 	  renderFractals:function(fractals){
 	    return !fractals.length ? null : fractals.reverse().map(function(fractalObj) {
 	      var fractal = fractalObj.val;
-	      return (React.createElement("div", {onClick: this.props.onSelect.bind(null,fractal)}, 
+	      return (React.createElement("div", {onClick: this.handleClick.bind(null, fractalObj)}, 
 	        React.createElement(FractalGenerator, {
 	          shape: fractal.shape, 
 	          generator: CustomGenerator(fractal.segment), 
@@ -537,6 +551,16 @@
 	        )
 	      );
 	    }.bind(this));
+	  },
+
+	  handleClick:function(fractal, e) {
+	    debugger;
+	    if(e.shiftKey) {
+	      this.props.onRemove(fractal.key);
+	    }else{
+	      this.props.onSelect(fractal.fractal);
+	    }
+
 	  },
 
 	  render:function() {

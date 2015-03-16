@@ -43,7 +43,7 @@ var FractalCollection = React.createClass({
   renderFractals(fractals){
     return !fractals.length ? null : fractals.reverse().map((fractalObj) =>{
       var fractal = fractalObj.val;
-      return (<div onClick={this.props.onSelect.bind(null,fractal)}>
+      return (<div onClick={this.handleClick.bind(null, fractalObj)}>
         <FractalGenerator
           shape={fractal.shape}
           generator={CustomGenerator(fractal.segment)}
@@ -54,6 +54,16 @@ var FractalCollection = React.createClass({
         </div>
       );
     });
+  },
+
+  handleClick(fractal, e) {
+    debugger;
+    if(e.shiftKey) {
+      this.props.onRemove(fractal.key);
+    }else{
+      this.props.onSelect(fractal.fractal);
+    }
+
   },
 
   render() {
