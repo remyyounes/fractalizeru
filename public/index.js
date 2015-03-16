@@ -461,7 +461,7 @@
 	            width: this.props.width, height: this.props.height}
 	          ), 
 	          React.createElement("input", {type: "range", min: 0, max: 5, onChange: this.changeIterations}), 
-	          React.createElement("button", {onClick: this.handleAdd})
+	          React.createElement("button", {onClick: this.handleAdd}, "Save Fractal")
 	        ), 
 
 	        React.createElement(FractalGenerator, {
@@ -524,7 +524,7 @@
 	  },
 
 	  renderFractals:function(fractals){
-	    return !fractals.length ? null : fractals.map(function(fractalObj) {
+	    return !fractals.length ? null : fractals.reverse().map(function(fractalObj) {
 	      var fractal = fractalObj.val;
 	      return (React.createElement("div", {onClick: this.props.onSelect.bind(null,fractal)}, 
 	        React.createElement(FractalGenerator, {

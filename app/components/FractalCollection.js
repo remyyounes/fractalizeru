@@ -41,7 +41,7 @@ var FractalCollection = React.createClass({
   },
 
   renderFractals(fractals){
-    return !fractals.length ? null : fractals.map((fractalObj) =>{
+    return !fractals.length ? null : fractals.reverse().map((fractalObj) =>{
       var fractal = fractalObj.val;
       return (<div onClick={this.props.onSelect.bind(null,fractal)}>
         <FractalGenerator

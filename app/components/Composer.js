@@ -80,7 +80,7 @@ var Composer = React.createClass({
             width={this.props.width} height={this.props.height}
           />
           <input type="range" min={0} max={5} onChange={this.changeIterations}/>
-          <button onClick={this.handleAdd}/>
+          <button onClick={this.handleAdd}>Save Fractal</button>
         </div>
 
         <FractalGenerator
