@@ -1,0 +1,39 @@
+body {
+  text-align: center;
+}
+
+
+.viewer-container svg {
+  overflow: visible;
+  margin: 20px;
+}
+.viewer-container .viewer {
+  transform: scale(3);
+  transform-origin: top center;
+}
+
+input[type="range"] {
+  display: block;
+  margin: 0 auto;
+}
+
+
+.collection {
+  z-index: 999;
+  border-left: 1px solid black;
+  height: 100%;
+  overflow-y: scroll;
+  width: 220px;
+  position: absolute;
+  top:0;
+  right: 0;
+  bottom: 0;
+}
+
+
+.instructions {
+  list-style: none;
+  color: #999;
+  font-family: arial;
+  font-size: 10px;
+}
