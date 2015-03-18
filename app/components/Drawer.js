@@ -27,6 +27,12 @@ var Drawer = React.createClass({
   mouseMove(e) {
     if(this.state.selected !== null) {
       var shape = this.props.shape.slice();
+      if ( e.ctrlKey && shape.length > 1) {
+          var ctrlNode = shape[this.state.selected-1] || shape[this.state.selected+1];
+          this.magnitude = ctrlNode;
+      } else {
+
+      }
       shape[this.state.selected] = new Victor(e.offsetX, e.offsetY);
       this.props.onChange(shape);
     }

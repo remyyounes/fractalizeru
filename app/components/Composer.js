@@ -86,7 +86,7 @@ var Composer = React.createClass({
             <li> Shift+Click on a node removes it. </li>
             <li> Shift+Click on the top canvases adds a node. </li>
             <li> Click on the side panel to load a saved fractal. </li>
-            <li> Shift+Click on the the side panel to remove a fractal (you can delete anybodys stuff, so be cool)</li>
+            <li> Shift+Click on the the side panel to remove a fractal (you can delete anybodys stuff).</li>
 
           </ul>
         </div>

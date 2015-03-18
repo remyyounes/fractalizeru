@@ -28,7 +28,7 @@ var Content = React.createClass({
   },
 
   parseFractals(list) {
-    var fractals = list.map((fractal) => {
+    var fractals = list.reverse().map((fractal) => {
       fractal.val.segment = fractal.val.segment.map((seg) => {
         return Victor.fromObject(seg);
       });

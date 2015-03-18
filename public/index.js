@@ -122,7 +122,7 @@
 	  },
 
 	  parseFractals:function(list) {
-	    var fractals = list.map(function(fractal)  {
+	    var fractals = list.reverse().map(function(fractal)  {
 	      fractal.val.segment = fractal.val.segment.map(function(seg)  {
 	        return Victor.fromObject(seg);
 	      });
@@ -473,7 +473,7 @@
 	            React.createElement("li", null, " Shift+Click on a node removes it. "), 
 	            React.createElement("li", null, " Shift+Click on the top canvases adds a node. "), 
 	            React.createElement("li", null, " Click on the side panel to load a saved fractal. "), 
-	            React.createElement("li", null, " Shift+Click on the the side panel to remove a fractal (you can delete anybodys stuff, so be cool)")
+	            React.createElement("li", null, " Shift+Click on the the side panel to remove a fractal (you can delete anybodys stuff).")
 
 	          )
 	        ), 
@@ -538,13 +538,12 @@
 	  },
 
 	  renderFractals:function(fractals){
-	    return !fractals.length ? null : fractals.reverse().map(function(fractalObj) {
-	      var fractal = fractalObj.val;
-	      return (React.createElement("div", {onClick: this.handleClick.bind(null, fractalObj)}, 
+	    return !fractals.length ? null : fractals.map(function(fractal) {
+	      return (React.createElement("div", {onClick: this.handleClick.bind(null, fractal)}, 
 	        React.createElement(FractalGenerator, {
-	          shape: fractal.shape, 
-	          generator: CustomGenerator(fractal.segment), 
-	          iterations: fractal.iterations, 
+	          shape: fractal.val.shape, 
+	          generator: CustomGenerator(fractal.val.segment), 
+	          iterations: fractal.val.iterations, 
 	          width: this.props.width, 
 	          height: this.props.height}
 	          )
@@ -554,11 +553,10 @@
 	  },
 
 	  handleClick:function(fractal, e) {
-	    debugger;
 	    if(e.shiftKey) {
 	      this.props.onRemove(fractal.key);
 	    }else{
-	      this.props.onSelect(fractal.fractal);
+	      this.props.onSelect(fractal.val);
 	    }
 
 	  },
@@ -8622,6 +8620,12 @@
 	  mouseMove:function(e) {
 	    if(this.state.selected !== null) {
 	      var shape = this.props.shape.slice();
+	      if ( e.ctrlKey && shape.length > 1) {
+	          var ctrlNode = shape[this.state.selected-1] || shape[this.state.selected+1];
+	          this.magnitude = ctrlNode;
+	      } else {
+
+	      }
 	      shape[this.state.selected] = new Victor(e.offsetX, e.offsetY);
 	      this.props.onChange(shape);
 	    }
