@@ -13,7 +13,7 @@ var Drawer = React.createClass({
   componentDidMount() {
     var node = this.getDOMNode();
     node.addEventListener("mousemove", this.mouseMove);
-    node.addEventListener("click", this.mouseClick);
+    node.addEventListener("mousedown", this.mouseClick);
     document.addEventListener("mouseup", this.deselect);
   },
 
@@ -39,7 +39,7 @@ var Drawer = React.createClass({
   },
 
   mouseClick(e) {
-    if (e.shiftKey) {
+    if (e.target === this.getDOMNode() && e.shiftKey) {
       this.addNode(e.offsetX, e.offsetY);
     }
   },
@@ -87,7 +87,6 @@ var Drawer = React.createClass({
       return ( <Component
         onSelect={this.selectNode.bind(null, index)}
         onRemove={this.removeNode.bind(null, index)}
-        onAdd={this.addNode}
         position={dot}
       />);
     });

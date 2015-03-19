@@ -8,8 +8,6 @@ var Dot = React.createClass({
   },
 
   handleMouseDown(e) {
-    e.preventDefault();
-    e.stopPropagation();
     if ( e.shiftKey ) {
       this.props.onRemove();
     } else {
@@ -23,7 +21,7 @@ var Dot = React.createClass({
           onMouseDown={this.handleMouseDown}
           cx={this.props.position.x}
           cy={this.props.position.y}
-          r={5} stroke="black" strokeWidth="5" fill="transparent" />
+          r={5} stroke="black" strokeWidth="5" fill="black" />
     );
   }
 });
